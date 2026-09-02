@@ -1,0 +1,18 @@
+.venv/
+__pycache__/
+*.pyc
+
+# large raw/intermediate downloads -- regenerate with src/fetch_promoter_data.py
+data/*.gct
+data/*.gct.gz
+data/gene_coords.tsv
+data/query_encoded.txt
+data/_seq_cache.json
+
+# raw_data.csv and the preprocessed train/val/test splits ARE tracked --
+# they're the expensive-to-refetch deliverable and what Colab needs directly.
+
+checkpoints/
+results/*.txt
+
+.cache/
