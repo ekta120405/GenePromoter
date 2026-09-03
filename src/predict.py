@@ -14,6 +14,14 @@ from paths import repo_path
 BASE_MODEL_ID = "zhihan1996/DNABERT-2-117M"
 MODEL_PATH = repo_path("checkpoints", "best_model")
 
+# Tuned via src/tune_threshold.py: a macro-F1 sweep over P(High) on the
+# validation set (never the test set) picked 0.66 over the naive 0.5,
+# improving test macro F1 0.67 -> 0.69 and correcting the model's bias
+# toward over-predicting High (recall 56%/78% Low/High -> 65%/73%).
+# This is specific to checkpoints/best_model -- re-run tune_threshold.py
+# and update this constant if the model is ever retrained.
+HIGH_THRESHOLD = 0.66
+
 
 def load():
     ensure_patched()
@@ -40,8 +48,14 @@ def predict(seq: str, tokenizer=None, model=None, max_length=256):
     with torch.no_grad():
         logits = model(**inputs).logits
         probs = torch.softmax(logits, dim=-1)[0]
-    label = "HIGH" if probs[1] > probs[0] else "LOW"
-    confidence = probs.max().item()
+    # confidence reflects whichever label the threshold actually picked, not
+    # just max(probs) -- those diverge once the threshold isn't 0.5 (e.g. at
+    # P(High)=0.60 < threshold, the prediction is LOW, so confidence should
+    # be P(Low)=0.40, not the larger P(High)=0.60).
+    if probs[1].item() >= HIGH_THRESHOLD:
+        label, confidence = "HIGH", probs[1].item()
+    else:
+        label, confidence = "LOW", probs[0].item()
     return {"prediction": f"{label} EXPRESSION", "confidence": round(confidence * 100, 1)}
 
 
