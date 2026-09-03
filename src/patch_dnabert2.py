@@ -139,9 +139,15 @@ def ensure_patched():
     snapshot_dir = snapshot_download(MODEL_ID)
     _patch_file(f"{snapshot_dir}/bert_layers.py")
 
+    # The model-name path segment here varies by transformers version: some
+    # versions use the repo name as-is ("DNABERT-2-117M"), others sanitize
+    # hyphens to "_hyphen_" ("DNABERT_hyphen_2_hyphen_117M"). Wildcard it
+    # instead of hardcoding either -- a mismatch here means the modules-cache
+    # copy silently never gets patched while the hub snapshot does, so the
+    # patch appears to "not apply" despite ensure_patched() reporting success.
     modules_glob = os.path.join(
         os.path.expanduser("~"), ".cache", "huggingface", "modules",
-        "transformers_modules", "zhihan1996", "DNABERT-2-117M", "*", "bert_layers.py",
+        "transformers_modules", "zhihan1996", "*", "*", "bert_layers.py",
     )
     for path in glob.glob(modules_glob):
         _patch_file(path)
