@@ -42,7 +42,12 @@ def load_gene_coords(path="data/gene_coords.tsv"):
 def load_gtex_tpm(path="data/GTEx_gene_median_tpm.gct", tissue=TISSUE):
     df = pd.read_csv(path, sep="\t", skiprows=2)
     df["ensembl_gene_id"] = df["Name"].str.split(".").str[0]
-    return df[["ensembl_gene_id", tissue]].rename(columns={tissue: "expression_value"})
+    df = df[["ensembl_gene_id", tissue]].rename(columns={tissue: "expression_value"})
+    # A handful of genes (e.g. pseudoautosomal-region genes) appear twice with
+    # conflicting TPM values after stripping the Ensembl version suffix. Drop
+    # both copies rather than arbitrarily picking one -- keeping either could
+    # silently duplicate the same gene/promoter into both train and test.
+    return df.drop_duplicates(subset="ensembl_gene_id", keep=False)
 
 
 def region_string(row):

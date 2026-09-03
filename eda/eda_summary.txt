@@ -1,0 +1,11 @@
+raw_data.csv: 5996 genes, 0 duplicate gene_ids
+missing gene_symbol: 12
+zero-TPM genes: 766 (12.8%)
+raw TPM: min=0.000 median=2.315 max=25339.7 mean=25.41
+
+train=4796 val=600 test=599 (class balance: 0.497 / 0.487 / 0.533)
+cross-split gene_id overlap: 0 (must be 0)
+
+GC content: mean=0.539 std=0.095
+  High-expression mean GC: 0.555
+  Low-expression  mean GC: 0.523
