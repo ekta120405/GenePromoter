@@ -38,7 +38,13 @@ def main():
     print(f"device: {device}")
 
     tokenizer = AutoTokenizer.from_pretrained(MODEL_ID, trust_remote_code=True)
-    model = AutoModelForSequenceClassification.from_pretrained(MODEL_ID, trust_remote_code=True, num_labels=2)
+    # low_cpu_mem_usage=False: DNABERT-2's custom BertEncoder.__init__ builds an
+    # ALiBi tensor eagerly (rebuild_alibi_tensor), which breaks under newer
+    # transformers' default meta-device fast-init path (tensors it allocates
+    # land on "meta" while others land on "cpu" -> device mismatch).
+    model = AutoModelForSequenceClassification.from_pretrained(
+        MODEL_ID, trust_remote_code=True, num_labels=2, low_cpu_mem_usage=False
+    )
     model.to(device)
 
     if args.freeze_base:

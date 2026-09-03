@@ -24,7 +24,11 @@ def main():
     device = "cuda" if torch.cuda.is_available() else "cpu"
 
     tokenizer = AutoTokenizer.from_pretrained(args.checkpoint, trust_remote_code=True)
-    model = AutoModelForSequenceClassification.from_pretrained(args.checkpoint, trust_remote_code=True)
+    # low_cpu_mem_usage=False: see comment in train.py -- avoids a meta/cpu
+    # device mismatch in DNABERT-2's custom ALiBi tensor construction.
+    model = AutoModelForSequenceClassification.from_pretrained(
+        args.checkpoint, trust_remote_code=True, low_cpu_mem_usage=False
+    )
     model.to(device).eval()
 
     test_ds = PromoterDataset(f"data/test_{args.seq_len}bp.csv", tokenizer, max_length=args.max_length)
