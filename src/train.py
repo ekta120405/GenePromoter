@@ -49,8 +49,15 @@ def main():
     model.to(device)
 
     if args.freeze_base:
+        # bert.pooler.dense is also freshly initialized (never in the
+        # pretrained checkpoint -- it always shows up as MISSING in the
+        # load report), and the classifier reads from its output
+        # (pooled_output = outputs[1] -> classifier(pooled_output)). If
+        # left frozen at random init, the classifier would be learning on
+        # top of an untrained random projection, not a meaningful
+        # "frozen features" baseline -- so both heads stay trainable here.
         for name, p in model.named_parameters():
-            if not name.startswith("classifier"):
+            if not (name.startswith("classifier") or name.startswith("bert.pooler")):
                 p.requires_grad = False
 
     suffix = f"_{args.seq_len}bp"
