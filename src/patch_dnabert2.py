@@ -1,6 +1,6 @@
 """
 DNABERT-2's remote code (zhihan1996/DNABERT-2-117M) predates modern
-`transformers` and breaks on any current install in three ways:
+`transformers` and breaks on any current install in four ways:
 
 1. `bert_layers.py` imports `.flash_attn_triton`, which unconditionally
    imports `triton`. Transformers' `check_imports` statically scans this
@@ -26,6 +26,19 @@ DNABERT-2's remote code (zhihan1996/DNABERT-2-117M) predates modern
    returning None. `None` is a valid `padding_idx` for `nn.Embedding`
    (means "no padding index"), so we switch the access to `getattr(...,
    None)` rather than trying to fix transformers' config internals.
+4. `BertEncoder.__init__` calls `self.rebuild_alibi_tensor(size=...)` with
+   `device=None`, eagerly building the ALiBi bias tensor. Newer
+   `transformers` initializes models inside a `with torch.device("meta"):`
+   context for speed (materializing real weights only after, from the
+   state dict). Modern tensor factory calls like `torch.arange(...,
+   device=None)` obey that ambient context and land on `meta`, but the
+   legacy `torch.Tensor(list)` constructor used for the `slopes` tensor
+   does not and always lands on real `cpu` -- so the two tensors end up on
+   different devices and multiplying them raises `RuntimeError: Tensor on
+   device meta is not on the expected device cpu!`. We patch the default
+   so `device=None` resolves to `"cpu"` explicitly (an explicit device
+   argument always overrides the ambient context), matching the pre-
+   meta-init behavior this code was written against.
 
 `trust_remote_code=True` loading copies the repo's .py files a SECOND time,
 into `~/.cache/huggingface/modules/transformers_modules/...` -- that copy,
@@ -57,6 +70,20 @@ CONFIG_IMPORT_MARKER = "from .configuration_bert import BertConfig"
 PAD_TOKEN_BLOCK = "padding_idx=config.pad_token_id)"
 PAD_TOKEN_REPLACEMENT = 'padding_idx=getattr(config, "pad_token_id", None))'
 
+ALIBI_DEVICE_BLOCK = """        n_heads = self.num_attention_heads
+
+        def _get_alibi_head_slopes(n_heads: int) -> List[float]:"""
+
+ALIBI_DEVICE_REPLACEMENT = """        n_heads = self.num_attention_heads
+        # Force a real device instead of inheriting transformers' meta-init
+        # context (see module docstring, point 4) -- otherwise arange()
+        # lands on "meta" while the legacy torch.Tensor() slopes stay on
+        # "cpu", and multiplying them raises a device-mismatch error.
+        if device is None:
+            device = "cpu"
+
+        def _get_alibi_head_slopes(n_heads: int) -> List[float]:"""
+
 
 def _patch_source(src):
     changed = False
@@ -67,6 +94,10 @@ def _patch_source(src):
 
     if PAD_TOKEN_BLOCK in src:
         src = src.replace(PAD_TOKEN_BLOCK, PAD_TOKEN_REPLACEMENT)
+        changed = True
+
+    if ALIBI_DEVICE_BLOCK in src:
+        src = src.replace(ALIBI_DEVICE_BLOCK, ALIBI_DEVICE_REPLACEMENT)
         changed = True
 
     if CONFIG_IMPORT_MARKER not in src:
