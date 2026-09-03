@@ -1,0 +1,15 @@
+checkpoint: /content/GenePromoter/checkpoints/lr1e5_model
+test set: data/test_1000bp.csv (n=599)
+
+              precision    recall  f1-score   support
+
+         Low       0.69      0.56      0.62       280
+        High       0.67      0.77      0.72       319
+
+    accuracy                           0.68       599
+   macro avg       0.68      0.67      0.67       599
+weighted avg       0.68      0.68      0.67       599
+
+Confusion matrix (rows=true, cols=pred, order=[Low, High]):
+[[158 122]
+ [ 72 247]]

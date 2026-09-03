@@ -1,0 +1,15 @@
+checkpoint: /content/GenePromoter/checkpoints/attndrop_model
+test set: data/test_1000bp.csv (n=599)
+
+              precision    recall  f1-score   support
+
+         Low       0.65      0.47      0.55       280
+        High       0.63      0.77      0.69       319
+
+    accuracy                           0.63       599
+   macro avg       0.64      0.62      0.62       599
+weighted avg       0.64      0.63      0.62       599
+
+Confusion matrix (rows=true, cols=pred, order=[Low, High]):
+[[133 147]
+ [ 73 246]]

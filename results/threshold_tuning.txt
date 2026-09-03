@@ -1,0 +1,36 @@
+checkpoint: C:\Users\Ishitaa Jain\Desktop\College\sem 7\GenePromoter\checkpoints/best_model
+threshold selected on validation set (n=600) by macro-F1 sweep, never touching the test set for selection
+  default (0.5): val macro F1=0.6485
+  tuned (0.66): val macro F1=0.6666
+
+=== TEST -- default threshold (threshold=0.50) ===
+accuracy: 0.6761
+
+              precision    recall  f1-score   support
+
+         Low       0.69      0.56      0.62       280
+        High       0.67      0.78      0.72       319
+
+    accuracy                           0.68       599
+   macro avg       0.68      0.67      0.67       599
+weighted avg       0.68      0.68      0.67       599
+
+Confusion matrix (rows=true, cols=pred, order=[Low, High]):
+[[156 124]
+ [ 70 249]]
+
+=== TEST -- tuned threshold (threshold=0.66) ===
+accuracy: 0.6895
+
+              precision    recall  f1-score   support
+
+         Low       0.68      0.65      0.66       280
+        High       0.70      0.73      0.71       319
+
+    accuracy                           0.69       599
+   macro avg       0.69      0.69      0.69       599
+weighted avg       0.69      0.69      0.69       599
+
+Confusion matrix (rows=true, cols=pred, order=[Low, High]):
+[[181  99]
+ [ 87 232]]

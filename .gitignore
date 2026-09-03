@@ -13,6 +13,5 @@ data/_seq_cache.json
 # they're the expensive-to-refetch deliverable and what Colab needs directly.
 
 checkpoints/
-results/*.txt
 
 .cache/
