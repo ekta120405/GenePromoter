@@ -9,6 +9,7 @@ from transformers import AutoModelForSequenceClassification, AutoTokenizer, get_
 
 from dataset import PromoterDataset
 from patch_dnabert2 import ensure_patched
+from paths import repo_path
 
 MODEL_ID = "zhihan1996/DNABERT-2-117M"
 
@@ -53,8 +54,8 @@ def main():
                 p.requires_grad = False
 
     suffix = f"_{args.seq_len}bp"
-    train_ds = PromoterDataset(f"data/train{suffix}.csv", tokenizer, max_length=args.max_length)
-    val_ds = PromoterDataset(f"data/val{suffix}.csv", tokenizer, max_length=args.max_length)
+    train_ds = PromoterDataset(repo_path("data", f"train{suffix}.csv"), tokenizer, max_length=args.max_length)
+    val_ds = PromoterDataset(repo_path("data", f"val{suffix}.csv"), tokenizer, max_length=args.max_length)
 
     if args.max_train_samples >= 0 and args.max_train_samples < len(train_ds):
         train_ds.df = train_ds.df.sample(n=args.max_train_samples, random_state=42).reset_index(drop=True)
@@ -71,9 +72,10 @@ def main():
         optimizer, num_warmup_steps=50, num_training_steps=args.epochs * len(train_loader)
     )
 
+    output_dir = repo_path(args.output_dir)
     best_val_f1 = 0.0
     patience_counter = 0
-    os.makedirs(args.output_dir, exist_ok=True)
+    os.makedirs(output_dir, exist_ok=True)
 
     for epoch in range(args.epochs):
         model.train()
@@ -106,9 +108,9 @@ def main():
         if val_f1 > best_val_f1:
             best_val_f1 = val_f1
             patience_counter = 0
-            model.save_pretrained(args.output_dir)
-            tokenizer.save_pretrained(args.output_dir)
-            print(f"  saved new best checkpoint to {args.output_dir}")
+            model.save_pretrained(output_dir)
+            tokenizer.save_pretrained(output_dir)
+            print(f"  saved new best checkpoint to {output_dir}")
         else:
             patience_counter += 1
             if patience_counter >= args.patience:

@@ -9,8 +9,9 @@ import torch
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
 
 from patch_dnabert2 import ensure_patched
+from paths import repo_path
 
-MODEL_PATH = "checkpoints/best_model"
+MODEL_PATH = repo_path("checkpoints", "best_model")
 
 
 def load():

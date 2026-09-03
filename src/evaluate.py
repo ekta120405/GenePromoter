@@ -1,4 +1,5 @@
 import argparse
+import os
 
 import torch
 from torch.utils.data import DataLoader
@@ -7,6 +8,7 @@ from transformers import AutoModelForSequenceClassification, AutoTokenizer
 
 from dataset import PromoterDataset
 from patch_dnabert2 import ensure_patched
+from paths import repo_path
 
 MODEL_ID = "zhihan1996/DNABERT-2-117M"
 
@@ -23,15 +25,18 @@ def main():
     ensure_patched()
     device = "cuda" if torch.cuda.is_available() else "cpu"
 
-    tokenizer = AutoTokenizer.from_pretrained(args.checkpoint, trust_remote_code=True)
+    checkpoint = repo_path(args.checkpoint)
+    output_path = repo_path(args.output)
+
+    tokenizer = AutoTokenizer.from_pretrained(checkpoint, trust_remote_code=True)
     # low_cpu_mem_usage=False: see comment in train.py -- avoids a meta/cpu
     # device mismatch in DNABERT-2's custom ALiBi tensor construction.
     model = AutoModelForSequenceClassification.from_pretrained(
-        args.checkpoint, trust_remote_code=True, low_cpu_mem_usage=False
+        checkpoint, trust_remote_code=True, low_cpu_mem_usage=False
     )
     model.to(device).eval()
 
-    test_ds = PromoterDataset(f"data/test_{args.seq_len}bp.csv", tokenizer, max_length=args.max_length)
+    test_ds = PromoterDataset(repo_path("data", f"test_{args.seq_len}bp.csv"), tokenizer, max_length=args.max_length)
     test_loader = DataLoader(test_ds, batch_size=args.batch_size)
 
     preds, labels = [], []
@@ -48,13 +53,14 @@ def main():
     print(report)
     print(matrix)
 
-    with open(args.output, "w") as f:
-        f.write(f"checkpoint: {args.checkpoint}\n")
+    os.makedirs(os.path.dirname(output_path), exist_ok=True)
+    with open(output_path, "w") as f:
+        f.write(f"checkpoint: {checkpoint}\n")
         f.write(f"test set: data/test_{args.seq_len}bp.csv (n={len(test_ds)})\n\n")
         f.write(report)
         f.write("\nConfusion matrix (rows=true, cols=pred, order=[Low, High]):\n")
         f.write(str(matrix))
-    print(f"\nSaved to {args.output}")
+    print(f"\nSaved to {output_path}")
 
 
 if __name__ == "__main__":
