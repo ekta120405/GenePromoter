@@ -5,7 +5,7 @@ import torch
 from torch.optim import AdamW
 from torch.utils.data import DataLoader
 from sklearn.metrics import accuracy_score, f1_score
-from transformers import AutoModelForSequenceClassification, AutoTokenizer, get_linear_schedule_with_warmup
+from transformers import AutoConfig, AutoModelForSequenceClassification, AutoTokenizer, get_linear_schedule_with_warmup
 
 from dataset import PromoterDataset
 from patch_dnabert2 import ensure_patched
@@ -28,6 +28,10 @@ def parse_args():
     ap.add_argument("--output-dir", default="checkpoints/best_model")
     ap.add_argument("--freeze-base", action="store_true",
                      help="freeze all but the classification head (stretch-goal experiment)")
+    ap.add_argument("--attn-dropout", type=float, default=None,
+                     help="override attention_probs_dropout_prob (DNABERT-2 pretrains with 0.0, "
+                          "originally to stay flash-attention-eligible -- moot here since triton/"
+                          "flash-attention is unavailable and patched out regardless); e.g. 0.1")
     return ap.parse_args()
 
 
@@ -39,12 +43,19 @@ def main():
     print(f"device: {device}")
 
     tokenizer = AutoTokenizer.from_pretrained(MODEL_ID, trust_remote_code=True)
+
+    config = AutoConfig.from_pretrained(MODEL_ID, trust_remote_code=True)
+    config.num_labels = 2
+    if args.attn_dropout is not None:
+        config.attention_probs_dropout_prob = args.attn_dropout
+        print(f"attention_probs_dropout_prob overridden to {args.attn_dropout}")
+
     # low_cpu_mem_usage=False: DNABERT-2's custom BertEncoder.__init__ builds an
     # ALiBi tensor eagerly (rebuild_alibi_tensor), which breaks under newer
     # transformers' default meta-device fast-init path (tensors it allocates
     # land on "meta" while others land on "cpu" -> device mismatch).
     model = AutoModelForSequenceClassification.from_pretrained(
-        MODEL_ID, trust_remote_code=True, num_labels=2, low_cpu_mem_usage=False
+        MODEL_ID, config=config, trust_remote_code=True, low_cpu_mem_usage=False
     )
     model.to(device)
 
