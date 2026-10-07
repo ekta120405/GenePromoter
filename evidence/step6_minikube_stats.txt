@@ -1,0 +1,2 @@
+﻿CONTAINER ID   NAME       CPU %     MEM USAGE / LIMIT   MEM %     NET I/O          BLOCK I/O         PIDS
+ec200db35fca   minikube   19.64%    2.065GiB / 3GiB     68.83%    842MB / 9.22MB   2.49GB / 3.56GB   220

@@ -1,0 +1,15 @@
+# Service: a stable network endpoint in front of the Pod.
+# Pods get new IPs whenever they restart; the Service address never changes.
+apiVersion: v1
+kind: Service
+metadata:
+  name: genepromoter-service
+spec:
+  type: NodePort                   # reachable from outside the cluster on a node port
+  selector:
+    app: genepromoter-api          # forwards to any Pod carrying this label
+  ports:
+    - protocol: TCP
+      port: 80                     # port inside the cluster
+      targetPort: 8000             # container port uvicorn listens on
+      nodePort: 30080              # fixed external port (range 30000-32767)

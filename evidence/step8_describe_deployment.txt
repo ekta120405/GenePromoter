@@ -1,0 +1,42 @@
+﻿Name:                   genepromoter-api
+Namespace:              default
+CreationTimestamp:      Wed, 07 Oct 2026 22:10:19 +0530
+Labels:                 app=genepromoter-api
+Annotations:            deployment.kubernetes.io/revision: 1
+Selector:               app=genepromoter-api
+Replicas:               1 desired | 1 updated | 1 total | 1 available | 0 unavailable
+StrategyType:           RollingUpdate
+MinReadySeconds:        0
+RollingUpdateStrategy:  25% max unavailable, 25% max surge
+Pod Template:
+  Labels:  app=genepromoter-api
+  Containers:
+   genepromoter-api:
+    Image:      genepromoter-api:1.0
+    Port:       8000/TCP
+    Host Port:  0/TCP
+    Limits:
+      cpu:     2
+      memory:  2500Mi
+    Requests:
+      cpu:         500m
+      memory:      1500Mi
+    Liveness:      http-get http://:8000/health delay=0s timeout=5s period=20s #success=1 #failure=3
+    Readiness:     http-get http://:8000/health delay=0s timeout=5s period=10s #success=1 #failure=3
+    Startup:       http-get http://:8000/health delay=0s timeout=5s period=10s #success=1 #failure=30
+    Environment:   <none>
+    Mounts:        <none>
+  Volumes:         <none>
+  Node-Selectors:  <none>
+  Tolerations:     <none>
+Conditions:
+  Type           Status  Reason
+  ----           ------  ------
+  Available      True    MinimumReplicasAvailable
+  Progressing    True    NewReplicaSetAvailable
+OldReplicaSets:  <none>
+NewReplicaSet:   genepromoter-api-6679c6778c (1/1 replicas created)
+Events:
+  Type    Reason             Age   From                   Message
+  ----    ------             ----  ----                   -------
+  Normal  ScalingReplicaSet  22m   deployment-controller  Scaled up replica set genepromoter-api-6679c6778c from 0 to 1

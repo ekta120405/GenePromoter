@@ -1,0 +1,12 @@
+{
+  "prediction": "HIGH EXPRESSION",
+  "confidence": 77.5,
+  "label": "HIGH",
+  "probability_high": 0.775,
+  "threshold": 0.66,
+  "sequence_length": 1000,
+  "inference_ms": 259.3,
+  "served_by": "khushikedia"
+}
+422 Value error, sequence is empty
+422 Value error, sequence length must be between 50 and 5000 bp (got 8000)
