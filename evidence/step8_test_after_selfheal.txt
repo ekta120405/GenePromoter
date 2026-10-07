@@ -1,0 +1,22 @@
+Target: http://127.0.0.1:55531
+
+GET /health -> 200 {'status': 'ok', 'model_loaded': True}
+GET /info   -> 200 {'model': 'DNABERT-2-117M fine-tuned (liver expression)', 'decision_threshold_high': 0.66, 'input_window_bp': 1000, 'pod_name': 'genepromoter-api-6679c6778c-mxns7', 'started_at': '2026-10-07 17:03:03', 'model_load_seconds': 8.6, 'requests_served': 0}
+
+POST /predict with an invalid sequence (expect 422):
+   422
+
+POST /predict on 10 held-out test-set promoters:
+  gene        true  predicted          conf%       ms  ok
+  GAPVD1      HIGH  HIGH EXPRESSION     77.5    879.9  Y
+  FNTB        HIGH  HIGH EXPRESSION     78.3    500.2  Y
+  BCS1L       HIGH  HIGH EXPRESSION     75.1    522.2  Y
+  TCIRG1      HIGH  LOW EXPRESSION      79.7    496.6  N
+  UACA        HIGH  HIGH EXPRESSION     77.0    481.3  Y
+  ARL5C       LOW   HIGH EXPRESSION     77.4    428.8  N
+  SPATC1L     LOW   LOW EXPRESSION      65.8    481.3  Y
+  NDUFAF2     LOW   HIGH EXPRESSION     78.7    465.2  N
+  HSPA2       LOW   LOW EXPRESSION      74.7    492.8  Y
+  H2BC3       LOW   LOW EXPRESSION      77.3    530.3  Y
+
+7/10 correct, total 5.5s, served by pod genepromoter-api-6679c6778c-mxns7

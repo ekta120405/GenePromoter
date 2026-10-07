@@ -1,0 +1,63 @@
+﻿Name:             genepromoter-api-6679c6778c-6qczk
+Namespace:        default
+Priority:         0
+Service Account:  default
+Node:             minikube/192.168.49.2
+Start Time:       Wed, 07 Oct 2026 22:10:19 +0530
+Labels:           app=genepromoter-api
+                  pod-template-hash=6679c6778c
+Annotations:      <none>
+Status:           Running
+IP:               10.244.0.3
+IPs:
+  IP:           10.244.0.3
+Controlled By:  ReplicaSet/genepromoter-api-6679c6778c
+Containers:
+  genepromoter-api:
+    Container ID:   containerd://fed80ea6673f5f3912c04e3411e1b372ac2cd19e5c29a4f0a04475024c11d42f
+    Image:          genepromoter-api:1.0
+    Image ID:       sha256:baea061852b7b18e347a00ad03f9dc84b53b7f747fd446c86b6b933fceb665dc
+    Port:           8000/TCP
+    Host Port:      0/TCP
+    State:          Running
+      Started:      Wed, 07 Oct 2026 22:10:21 +0530
+    Ready:          True
+    Restart Count:  0
+    Limits:
+      cpu:     2
+      memory:  2500Mi
+    Requests:
+      cpu:        500m
+      memory:     1500Mi
+    Liveness:     http-get http://:8000/health delay=0s timeout=5s period=20s #success=1 #failure=3
+    Readiness:    http-get http://:8000/health delay=0s timeout=5s period=10s #success=1 #failure=3
+    Startup:      http-get http://:8000/health delay=0s timeout=5s period=10s #success=1 #failure=30
+    Environment:  <none>
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-6trq5 (ro)
+Conditions:
+  Type                        Status
+  PodReadyToStartContainers   True 
+  Initialized                 True 
+  Ready                       True 
+  ContainersReady             True 
+  PodScheduled                True 
+Volumes:
+  kube-api-access-6trq5:
+    Type:                    Projected (a volume that contains injected data from multiple sources)
+    TokenExpirationSeconds:  3607
+    ConfigMapName:           kube-root-ca.crt
+    Optional:                false
+    DownwardAPI:             true
+QoS Class:                   Burstable
+Node-Selectors:              <none>
+Tolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type     Reason     Age                From               Message
+  ----     ------     ----               ----               -------
+  Normal   Scheduled  22m                default-scheduler  Successfully assigned default/genepromoter-api-6679c6778c-6qczk to minikube
+  Normal   Pulled     22m                kubelet            spec.containers{genepromoter-api}: Container image "genepromoter-api:1.0" already present on machine and can be accessed by the pod
+  Normal   Created    22m                kubelet            spec.containers{genepromoter-api}: Container created
+  Normal   Started    22m                kubelet            spec.containers{genepromoter-api}: Container started
+  Warning  Unhealthy  21m (x2 over 21m)  kubelet            spec.containers{genepromoter-api}: Startup probe failed: Get "http://10.244.0.3:8000/health": dial tcp 10.244.0.3:8000: connect: connection refused

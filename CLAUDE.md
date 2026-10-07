@@ -27,7 +27,7 @@ Title doc workflow, and where each step lives:
 - [x] Kit reviewed and fixed (see `CHANGELOG_CC.md`)
 - [x] Local API run with real model (`uvicorn app:app`): 7/10, no segfault on Windows
 - [x] Docker build + run: offline run passes, ~940 MiB, evidence in `evidence/`
-- [ ] Minikube deploy + test through Service (see `RUNBOOK.md`)
+- [x] Minikube deploy + test through Service: 7/10 via NodePort, Pod self-heals in 22s (see `RUNBOOK.md`, `evidence/step5-8_*`)
 - [ ] Demo screenshots
 - [ ] Review docs: requirements, design doc, tools used, research paper abstract + lit review, "why CC / combined project" justification
 

@@ -1,0 +1,15 @@
+NAME                                READY   STATUS    RESTARTS   AGE
+genepromoter-api-6679c6778c-6qczk   1/1     Running   0          22m
+genepromoter-api-6679c6778c-6qczk   1/1     Terminating   0          22m
+genepromoter-api-6679c6778c-6qczk   1/1     Terminating   0          22m
+genepromoter-api-6679c6778c-mxns7   0/1     Pending       0          0s
+genepromoter-api-6679c6778c-mxns7   0/1     Pending       0          0s
+genepromoter-api-6679c6778c-mxns7   0/1     ContainerCreating   0          1s
+genepromoter-api-6679c6778c-mxns7   0/1     ContainerCreating   0          2s
+genepromoter-api-6679c6778c-mxns7   0/1     Running             0          2s
+genepromoter-api-6679c6778c-6qczk   0/1     Completed           0          22m
+genepromoter-api-6679c6778c-6qczk   0/1     Completed           0          22m
+genepromoter-api-6679c6778c-6qczk   0/1     Completed           0          22m
+genepromoter-api-6679c6778c-mxns7   0/1     Running             0          11s
+genepromoter-api-6679c6778c-mxns7   0/1     Running             0          21s
+genepromoter-api-6679c6778c-mxns7   1/1     Running             0          21s
