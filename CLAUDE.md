@@ -27,22 +27,22 @@ Title doc workflow, and where each step lives:
 - [x] Kit reviewed and fixed (see `CHANGELOG_CC.md`)
 - [x] Local API run with real model (`uvicorn app:app`): 7/10, no segfault on Windows
 - [x] Docker build + run: offline run passes, ~940 MiB, evidence in `evidence/`
-- [ ] Minikube deploy + test through Service (Phase 2, see `RUNBOOK.md`)
+- [ ] Minikube deploy + test through Service (see `RUNBOOK.md`)
 - [ ] Demo screenshots
 - [ ] Review docs: requirements, design doc, tools used, research paper abstract + lit review, "why CC / combined project" justification
 
 ## Device plan
-Two phases, two laptops.
-
-Phase 1, this laptop (8GB, ~5.9GB usable): steps 0 to 4 only (plain run, Docker build + run). No Minikube.
-- `%UserProfile%\.wslconfig` caps the Docker VM at 4GB (copied from `wslconfig.txt`)
-- Close browser and other apps during Docker steps
-- Never run the uvicorn server and the Docker container at the same time
-- Python 3.12 via `py -3.12` (3.13 is the default `python`)
+Everything runs on one Windows laptop with 8GB RAM (~5.9GB usable), in low memory mode. No second laptop.
+- `%UserProfile%\.wslconfig` caps the Docker VM at 4GB (copied from `wslconfig.txt`; 3.5GB if the laptop freezes)
+- `minikube start --driver=docker --cpus=2 --memory=3072`; image goes in via `minikube image load`
+- Pod requests 500m CPU / 1500Mi, limits 2 CPU / 2500Mi (set in `k8s/deployment.yaml`); measured use ~940 MiB
+- C: disk is tight (~8.6GB free after Phase 1); `docker builder prune -f` frees ~3GB
+- Close browser and other apps during Docker and Minikube steps
+- Only one of these at a time: uvicorn, plain `docker run`, Minikube
+- No `minikube dashboard` or metrics-server addon (memory)
+- kubectl comes bundled with Docker Desktop
+- Python 3.12 via `py -3.12` or `.venv` (3.13 is the default `python`)
 - Use PowerShell; use `scripts/test_api.py` instead of curl (PowerShell curl is a different command)
-
-Phase 2, friend's 16GB laptop: Minikube deploy, test, evidence. Follow `RUNBOOK.md`.
-- Pod requests 500m CPU / 1500Mi, limits 2 CPU / 2500Mi (set in `k8s/deployment.yaml`)
 
 ## Never
 - Commit `checkpoints/` (GitHub 100MB limit; already gitignored).

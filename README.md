@@ -65,10 +65,10 @@ First build takes 10 to 20 min (torch download + model cache bake). Rebuilds aft
 
 ## Step 4. Start Minikube and load the image
 
-Full Phase 2 steps (16GB laptop, build inside Minikube, evidence, troubleshooting): see `RUNBOOK.md`.
+Full Minikube steps for the 8GB laptop (memory and disk budget, evidence, troubleshooting): see `RUNBOOK.md`.
 
 ```bash
-minikube start --driver=docker --cpus=4 --memory=6144
+minikube start --driver=docker --cpus=2 --memory=3072
 minikube image load genepromoter-api:1.0
 minikube image ls | grep genepromoter       # PowerShell: | findstr genepromoter
 ```
@@ -117,5 +117,5 @@ minikube stop
 | Build fails at the "bake" step | Checkpoint missing or incomplete in `checkpoints/best_model/`, or no internet during build |
 | Container fails on startup with an offline/cache error | Delete the `ENV HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1` lines and rebuild (Pod will then need internet on first start) |
 | `ImagePullBackOff` / `ErrImageNeverPull` | Image not loaded into Minikube; redo Step 4, tag must match `genepromoter-api:1.0` |
-| Pod stuck `Pending` | Not enough resources; `minikube delete` then `minikube start --driver=docker --cpus=4 --memory=6144` |
+| Pod stuck `Pending` | Not enough resources; `minikube delete` then `minikube start --driver=docker --cpus=2 --memory=3072` |
 | `OOMKilled` / `CrashLoopBackOff` | `kubectl logs <pod>`; raise `limits.memory` to `3Gi` (needs `minikube start --memory=3584`) |

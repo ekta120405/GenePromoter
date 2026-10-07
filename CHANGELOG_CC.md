@@ -34,9 +34,9 @@ Measured memory is ~940 MiB, so the 1500Mi request and 2500Mi limit leave safe h
 | Change | Why |
 |---|---|
 | `.dockerignore` adds `evidence/`, `.claude/`, `.vscode/`, `wslconfig.txt` | Smaller build context, nothing irrelevant in the image |
-| `RUNBOOK.md` added | Phase 2 steps for the 16GB laptop: Minikube, deploy, test, evidence, troubleshooting |
+| `RUNBOOK.md` added | Minikube steps for this 8GB laptop: memory and disk budget, deploy, test, evidence, troubleshooting |
 | `evidence/` added | Phase 1 proof: startup logs, test outputs, `docker stats`, image size, offline run |
-| `README.md` Minikube flags | Point to `RUNBOOK.md` and the 16GB laptop sizing |
+| `README.md` | Points to `RUNBOOK.md` for the Minikube steps |
 
 ## Phase 1 results
 
