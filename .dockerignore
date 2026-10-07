@@ -1,0 +1,16 @@
+.git
+.venv
+__pycache__
+*.pyc
+k8s/
+scripts/
+*.md
+data/
+notebooks/
+results/
+eda/
+.cache/
+evidence/
+.claude/
+.vscode/
+wslconfig.txt

@@ -1,0 +1,45 @@
+# Deployment: tells Kubernetes "keep 1 Pod of this container running".
+# If the Pod crashes or is deleted, the Deployment recreates it (self-healing).
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: genepromoter-api
+  labels:
+    app: genepromoter-api
+spec:
+  replicas: 1                      # single replica, scaling is out of scope
+  selector:
+    matchLabels:
+      app: genepromoter-api
+  template:                        # <- this block IS the Pod definition
+    metadata:
+      labels:
+        app: genepromoter-api      # the Service finds the Pod by this label
+    spec:
+      containers:
+        - name: genepromoter-api
+          image: genepromoter-api:1.0
+          imagePullPolicy: Never   # use the image loaded into Minikube, never pull from a registry
+          ports:
+            - containerPort: 8000
+          resources:               # resource provisioning
+            requests:              # guaranteed minimum, used by the scheduler
+              cpu: "500m"          # half a CPU core
+              memory: "1500Mi"
+            limits:                # hard ceiling; exceeding memory = OOMKilled
+              cpu: "2"
+              memory: "2500Mi"     # sized for an 8GB laptop; raise to 3Gi if OOMKilled
+          startupProbe:            # model load is slow; give it up to 5 min before other probes kick in
+            httpGet: { path: /health, port: 8000 }
+            periodSeconds: 10
+            timeoutSeconds: 5      # default 1s is too tight while the CPU is busy loading/predicting
+            failureThreshold: 30
+          readinessProbe:          # only route traffic once the model is loaded
+            httpGet: { path: /health, port: 8000 }
+            periodSeconds: 10
+            timeoutSeconds: 5
+          livenessProbe:           # restart the container if it stops responding
+            httpGet: { path: /health, port: 8000 }
+            periodSeconds: 20
+            timeoutSeconds: 5
+            failureThreshold: 3

@@ -1,0 +1,22 @@
+Target: http://localhost:8000
+
+GET /health -> 200 {'status': 'ok', 'model_loaded': True}
+GET /info   -> 200 {'model': 'DNABERT-2-117M fine-tuned (liver expression)', 'decision_threshold_high': 0.66, 'input_window_bp': 1000, 'pod_name': 'khushikedia', 'started_at': '2026-10-07 21:22:06', 'model_load_seconds': 144.6, 'requests_served': 0}
+
+POST /predict with an invalid sequence (expect 422):
+   422
+
+POST /predict on 10 held-out test-set promoters:
+  gene        true  predicted          conf%       ms  ok
+  GAPVD1      HIGH  HIGH EXPRESSION     77.5    390.9  Y
+  FNTB        HIGH  HIGH EXPRESSION     78.3    277.6  Y
+  BCS1L       HIGH  HIGH EXPRESSION     75.1    272.1  Y
+  TCIRG1      HIGH  LOW EXPRESSION      79.7    301.8  N
+  UACA        HIGH  HIGH EXPRESSION     77.0    274.7  Y
+  ARL5C       LOW   HIGH EXPRESSION     77.4    270.8  N
+  SPATC1L     LOW   LOW EXPRESSION      65.8    251.2  Y
+  NDUFAF2     LOW   HIGH EXPRESSION     78.7    273.5  N
+  HSPA2       LOW   LOW EXPRESSION      74.7    258.2  Y
+  H2BC3       LOW   LOW EXPRESSION      77.3    250.8  Y
+
+7/10 correct, total 23.2s, served by pod khushikedia

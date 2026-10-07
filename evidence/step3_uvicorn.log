@@ -1,0 +1,34 @@
+INFO:     Started server process [23776]
+INFO:     Waiting for application startup.
+Fetching 12 files:   0%|          | 0/12 [00:00<?, ?it/s]D:\cc-project\GenePromoter\.venv\Lib\site-packages\huggingface_hub\file_download.py:143: UserWarning: `huggingface_hub` cache-system uses symlinks by default to efficiently store duplicated files but your machine does not support them in C:\Users\khush\.cache\huggingface\hub\models--zhihan1996--DNABERT-2-117M. Caching files will still work but in a degraded version that might require more space on your disk. This warning can be disabled by setting the `HF_HUB_DISABLE_SYMLINKS_WARNING` environment variable. For more details, see https://huggingface.co/docs/huggingface_hub/how-to-cache#limitations.
+To support symlinks on Windows, you either need to activate Developer Mode or to run Python as an administrator. In order to activate developer mode, see this article: https://docs.microsoft.com/en-us/windows/apps/get-started/enable-your-device-for-development
+  warnings.warn(message)
+Xet Storage is enabled for this repo, but the 'hf_xet' package is not installed. Falling back to regular HTTP download. For better performance, install the package with: `pip install huggingface_hub[hf_xet]` or `pip install hf_xet`
+Fetching 12 files:  67%|######6   | 8/12 [00:01<00:00,  7.01it/s]Fetching 12 files:  92%|#########1| 11/12 [00:20<00:01,  1.82s/it]Fetching 12 files: 100%|##########| 12/12 [02:21<00:00, 11.79s/it]Fetching 12 files: 100%|##########| 12/12 [02:21<00:00, 11.79s/it]
+D:\cc-project\GenePromoter\.venv\Lib\site-packages\huggingface_hub\file_download.py:949: FutureWarning: `resume_download` is deprecated and will be removed in version 1.0.0. Downloads always resume when possible. If you want to force a new download, use `force_download=True`.
+  warnings.warn(
+C:\Users\khush\.cache\huggingface\modules\transformers_modules\best_model\bert_layers.py:126: UserWarning: Unable to import Triton; defaulting MosaicBERT attention implementation to pytorch (this will reduce throughput when using this model).
+  warnings.warn(
+[startup] model loaded in 144.6s (torch threads: 4)
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+INFO:     127.0.0.1:50630 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50632 - "GET /info HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50634 - "POST /predict HTTP/1.1" 422 Unprocessable Entity
+INFO:     127.0.0.1:50636 - "POST /predict HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50639 - "POST /predict HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50641 - "POST /predict HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50643 - "POST /predict HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50645 - "POST /predict HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50647 - "POST /predict HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50649 - "POST /predict HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50651 - "POST /predict HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50653 - "POST /predict HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50655 - "POST /predict HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50656 - "POST /predict HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50657 - "POST /predict HTTP/1.1" 422 Unprocessable Entity
+INFO:     127.0.0.1:50658 - "POST /predict HTTP/1.1" 422 Unprocessable Entity
+INFO:     127.0.0.1:65133 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65167 - "GET /info HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65133 - "GET /static/samples.json HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65133 - "GET /favicon.ico HTTP/1.1" 404 Not Found

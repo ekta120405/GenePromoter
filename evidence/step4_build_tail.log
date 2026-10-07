@@ -1,0 +1,30 @@
+#11 DONE 0.1s
+
+#12 [ 8/10] RUN python -c "import sys; sys.path.insert(0, 'src'); from predict import load; load(); print('model cache baked')"  && find /root/.cache/huggingface/hub -path '*DNABERT-2-117M/snapshots/*' ( -name '*.bin' -o -name '*.safetensors' )       -exec sh -c 'rm -f "$(readlink -f "$1")" "$1"' _ {} ;  && du -sh /root/.cache/huggingface
+#12 5.888 Fetching 12 files:   0%|          | 0/12 [00:00<?, ?it/s]Fetching 12 files:  67%|██████▋   | 8/12 [00:00<00:00, 17.79it/s]Fetching 12 files:  92%|█████████▏| 11/12 [00:20<00:01,  1.82s/it]Fetching 12 files: 100%|██████████| 12/12 [01:06<00:00,  5.55s/it]Fetching 12 files: 100%|██████████| 12/12 [01:06<00:00,  5.55s/it]
+#12 72.50 /usr/local/lib/python3.12/site-packages/huggingface_hub/file_download.py:949: FutureWarning: `resume_download` is deprecated and will be removed in version 1.0.0. Downloads always resume when possible. If you want to force a new download, use `force_download=True`.
+#12 72.50   warnings.warn(
+#12 73.59 /root/.cache/huggingface/modules/transformers_modules/best_model/bert_layers.py:126: UserWarning: Unable to import Triton; defaulting MosaicBERT attention implementation to pytorch (this will reduce throughput when using this model).
+#12 73.59   warnings.warn(
+#12 77.81 model cache baked
+#12 79.76 488K	/root/.cache/huggingface
+#12 DONE 80.0s
+
+#13 [ 9/10] COPY app.py .
+#13 DONE 0.1s
+
+#14 [10/10] COPY static/ ./static/
+#14 DONE 0.1s
+
+#15 exporting to image
+#15 exporting layers
+#15 exporting layers 43.0s done
+#15 exporting manifest sha256:311c8f33ecc24aba24d954d56ddf7d5bef71ffdc7503d12f5ad0229bbb16cb10 0.0s done
+#15 exporting config sha256:baea061852b7b18e347a00ad03f9dc84b53b7f747fd446c86b6b933fceb665dc 0.0s done
+#15 exporting attestation manifest sha256:7aa72567763632e27ee7b9c324bc6574f8a7157f4165789688af5c828b85a275 0.0s done
+#15 exporting manifest list sha256:de9013486d75250f57997e3de44097e7506e0305bbfa446324910731aa0f791e 0.0s done
+#15 naming to docker.io/library/genepromoter-api:1.0 0.0s done
+#15 unpacking to docker.io/library/genepromoter-api:1.0
+#15 unpacking to docker.io/library/genepromoter-api:1.0 32.8s done
+#15 DONE 76.2s
+BUILD EXIT CODE: 0, took 258s

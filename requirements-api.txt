@@ -1,0 +1,8 @@
+# Runtime-only deps for the inference container.
+# torch is installed separately in the Dockerfile from the CPU-only wheel index
+# (keeps the image ~1.5GB smaller than the default CUDA build).
+transformers==4.40.0
+einops==0.8.2
+fastapi>=0.110,<1.0
+uvicorn[standard]>=0.29
+pydantic>=2.0

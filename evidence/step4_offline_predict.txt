@@ -1,0 +1,1 @@
+offline predict: {"prediction":"HIGH EXPRESSION","confidence":77.5,"label":"HIGH","probability_high":0.775,"threshold":0.66,"sequence_length":1000,"inference_ms":1026.4,"served_by":"417c6b91ca81"}
